@@ -25,8 +25,8 @@ namespace CRUD_System.Controllers
         {
             if (dto.Poster == null)
                 return BadRequest("poster is rquierd");
-            if (!_allwExtention.Contains(Path.GetExtension(dto.Poster.FileName).ToLower()))
-                return BadRequest("only jpg or png are allowed");
+            //if (!_allwExtention.Contains(Path.GetExtension(dto.Poster.FileName).ToLower()))
+            //    return BadRequest("only jpg or png are allowed");
             if (dto.Poster.Length > _maxAllowPosterSize)
                 return BadRequest("max allowed size for poste is 1MB");
             var isValidGenre = await _genreService.isvalidGenre(dto.GenreId);
@@ -62,7 +62,8 @@ namespace CRUD_System.Controllers
         public async Task<IActionResult> GetByGenreId(byte Id)
         {
             var movie = await _movieService.GetAllMovie(Id);
-            var dto = _mapper.Map<MovieDetailsDto>(movie);
+
+            var dto = _mapper.Map<IEnumerable< MovieDetailsDto> >(movie);
             return Ok(dto);
 
         }
@@ -95,7 +96,7 @@ namespace CRUD_System.Controllers
             _movieService.Update(movie);
             return Ok(movie);
         }
-        [HttpDelete("Delete{id}")]
+        [HttpDelete("Delete{Id}")]
         public async Task<IActionResult> Delete(int Id)
         {
             var movie = await _movieService.GetById(Id);
